@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ClassLibrary.Utils;
+using ClassLibrary.Utils.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -10,6 +12,13 @@ namespace ClassLibrary
 {
     public class CustomParser
     {
+        protected ILogger Logger { get; private set; }
+
+        public CustomParser()
+        {
+            Logger = new Logger();
+        }
+
         /// <summary>
         /// This method try to parse string to int.
         /// </summary>
@@ -18,21 +27,17 @@ namespace ClassLibrary
         /// <returns>true: if parsing succeeded
         /// false: if input string unable to parse
         /// </returns>
-        public bool TryParseStringToInt(string input, ref int intResult)
+        public bool TryParseStringToInt(string input, out int intResult)
         {
             try
             {
                 ParseStringToInt(input, out intResult);
                 return true;
             }
-            catch (ArgumentNullException ex)
+            catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return false;
-            }
-            catch (FormatException ex)
-            {
-                Console.WriteLine(ex.Message);
+                intResult = 0;
+                Logger.LogException(ex);
                 return false;
             }
         }
@@ -48,26 +53,29 @@ namespace ClassLibrary
         {
             long temporaryValue = 0;
 
-            if (string.IsNullOrEmpty(input))
+            if (string.IsNullOrWhiteSpace(input))
             {
                 throw new ArgumentNullException("input");
             }
 
             input = input.Trim();
+            var hasSign = input[0] == '-' || input[0] == '+';
 
-            if (((input[0] == '-' || input[0] == '+') && input.Length > 11) || !(input[0] == '-' || input[0] == '+') && (input.Length > 10))
+            if (hasSign && (input.Length > 11) || !hasSign && (input.Length > 10))
             {
                 throw new FormatException($"Input string '{input}' is too long to be an int number.");
             }
 
             if (IsItInt(input))
             {
-                if (input[0] == '-' || input[0] == '+')
+                if (hasSign)
                 {
                     Parse(input.Substring(1), ref temporaryValue);
 
                     if (input[0] == '-')
+                    {
                         temporaryValue *= -1;
+                    }
                 }
                 else
                 {
@@ -75,16 +83,14 @@ namespace ClassLibrary
                 }
                 if (temporaryValue < int.MinValue || temporaryValue > int.MaxValue)
                 {
-                    throw new FormatException($"Input string '{input}' has wrong format. Expected: int. Actual: long.");
+                    throw new FormatException($"Input string '{input}' has wrong format. Expected format is int.");
                 }
                 intResult = (int)temporaryValue;
             }
-            else if (IsItFloat(input))
-            {
-                throw new FormatException($"Input string '{input}' has wrong format. Expected: int. Actual: float.");
-            }
             else
-                throw new FormatException($"Input string '{input}' has wrong format. Expected: int. Actual: string.");
+            {
+                throw new FormatException($"Input string '{input}' has wrong format. Expected format is int.");
+            }
         }
 
         #region Private
@@ -100,15 +106,25 @@ namespace ClassLibrary
 
         private bool IsItInt(string stringToVerify)
         {
-            var regExpression = new Regex(@"^[+|-]?\d{1,10}$");
-            return regExpression.IsMatch(stringToVerify);
-        }
+            bool isItInt = false;
+            if(stringToVerify[0] == '-' || stringToVerify[0] == '+')
+            {
+                stringToVerify = stringToVerify.Substring(1);
+            }
 
-        private bool IsItFloat(string stringToVerify)
-        {
-            string separator = NumberFormatInfo.CurrentInfo.NumberDecimalSeparator;
-            var regExpression = new Regex($@"^[+\-]?[0-9]*(?:\{separator}[0-9]+)?$");
-            return regExpression.IsMatch(stringToVerify);
+            foreach (var c in stringToVerify)
+            {
+                var k = c - '0';
+                isItInt = Enumerable.Range(0, 9).Contains(k);
+                if (!isItInt)
+                {
+                    return isItInt;
+                }
+            }
+ 
+            return isItInt;
+           /* var regExpression = new Regex(@"^[+|-]?\d{1,10}$");
+            return regExpression.IsMatch(stringToVerify);*/
         }
 
         #endregion

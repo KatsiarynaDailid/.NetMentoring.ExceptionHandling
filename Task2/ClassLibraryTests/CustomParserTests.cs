@@ -67,8 +67,8 @@ namespace ClassLibraryTests
         [DataTestMethod]
         public void TryParseStringToInt_VerifyParserWithValidValues_CorrectNumberAfterParsing(string valueToParse, int expectedParse)
         {
-            int actualResult = 0;
-            var result = customParser.TryParseStringToInt(valueToParse, ref actualResult);
+            int actualResult;
+            var result = customParser.TryParseStringToInt(valueToParse, out actualResult);
 
             Assert.IsTrue(result, "Wrong parse result for valid int number.");
             Assert.AreEqual(expectedParse, actualResult, "Wrong parse result for valid int number.");
@@ -85,8 +85,8 @@ namespace ClassLibraryTests
         [DataTestMethod]
         public void TryParseStringToInt_VerifyParserWithInvalidValues_FalseIsReturn(string valueToParse)
         {
-            int result = 0;
-            var actualResult = customParser.TryParseStringToInt(valueToParse, ref result);
+            int result;
+            var actualResult = customParser.TryParseStringToInt(valueToParse, out result);
 
             Assert.IsFalse(actualResult, "Wrong parse result for invalid values.") ;
         }

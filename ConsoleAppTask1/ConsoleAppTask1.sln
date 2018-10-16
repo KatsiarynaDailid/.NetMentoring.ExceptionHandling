@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleAppTask1", "ConsoleAppTask1\ConsoleAppTask1.csproj", "{D57C9912-2CB8-49AC-B15A-90CD0431E883}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextProcessingLibrary", "TextProcessingLibrary\TextProcessingLibrary.csproj", "{866B1D4A-27C3-4699-AE35-B876D43047F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D57C9912-2CB8-49AC-B15A-90CD0431E883}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D57C9912-2CB8-49AC-B15A-90CD0431E883}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D57C9912-2CB8-49AC-B15A-90CD0431E883}.Release|Any CPU.Build.0 = Release|Any CPU
+		{866B1D4A-27C3-4699-AE35-B876D43047F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{866B1D4A-27C3-4699-AE35-B876D43047F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{866B1D4A-27C3-4699-AE35-B876D43047F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{866B1D4A-27C3-4699-AE35-B876D43047F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
